@@ -75,7 +75,7 @@ public: //public class members
 	real-world positions and wirings of the matrices (matrices are represented by the numbers):
 
 	>-0--1--2
-			|
+	        |
 	  5--4--3
 	  |
 	  6--7--8
