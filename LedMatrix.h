@@ -88,6 +88,30 @@ public: //public class members
 	MatrixConfig[0] = 0; MatrixConfig[1] = 1; MatrixConfig[2] = 2;
 	MatrixConfig[3] = 5; MatrixConfig[4] = 4; MatrixConfig[5] = 3;
 	MatrixConfig[6] = 6; MatrixConfig[7] = 7; MatrixConfig[8] = 8;
+
+
+	in the case above, the matrices 3, 4 and 5 probably light up in a wrong way (their content is rotated by 180°)
+	with "bSwitchedDir", you can turn the matrices back around by 180°, so it displays correctly (in the case above, "bSwitchedDir would probably look like { false, false, false,
+	                                                                                                                                                          true,  true,  true,
+	                                                                                                                                                          false, false, false } )
+
+	you can check, if the matrices are the right orientation, by letting a point walk from the top left to the bottom right:
+
+	LedMatrix lm = **initialize LedMatrix**;
+
+	ClearDisplay();
+	for (unsigned int x = 0; x < iMatrixNumColumns * 8; x++)
+	{
+		for (unsigned int y = 0; y < iMatrixNumRows * 8; y++)
+		{
+			SetLed(x, y, true);
+			delay(100);
+			SetLed(x, y, false);
+		}
+	}
+
+	if the point suddenly jumps when transitioning from one matrix to another, you need to invert the matrix
+
 	*/
 
 	~LedMatrix();
