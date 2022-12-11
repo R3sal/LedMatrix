@@ -99,18 +99,18 @@ public: //public class members
 
 	LedMatrix lm = **initialize LedMatrix**;
 
-	ClearDisplay();
-	for (unsigned int x = 0; x < iMatrixNumColumns * 8; x++)
+	lm.ClearDisplay();
+	for (unsigned int y = 0; y < iMatrixNumColumns * 8; y++)
 	{
-		for (unsigned int y = 0; y < iMatrixNumRows * 8; y++)
+		for (unsigned int x = 0; x < iMatrixNumRows * 8; x++)
 		{
-			SetLed(x, y, true);
+			lm.SetLed(x, y, true);
 			delay(100);
-			SetLed(x, y, false);
+			lm.SetLed(x, y, false);
 		}
 	}
 
-	if the point suddenly jumps when transitioning from one matrix to another, you need to invert the matrix
+	if the point suddenly jumps when transitioning from one matrix to another, you need to rotate the matrix
 
 	*/
 
