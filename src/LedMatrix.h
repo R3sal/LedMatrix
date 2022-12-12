@@ -152,24 +152,44 @@ public: //public class members
 	"bStates" tells the function, which LEDs should be illuminated
 
 	e.g.
-	3x2 LED matrix where the following LEDs should be on and off:
+	you want following LEDs to be on/off
 	
-	on ; on ; off;
-	off; on ; off;
+	on ; on ; off; off; off; on ; on ; on ;
+	off; on ; off; on ; off; off; off; off;
+	off; on ; off; on ; off; off; off; off;
+	off; on ; off; on ; off; off; off; off;
+	on ; on ; on ; on ; off; off; on ; off;
+	on ; off; on ; on ; off; on ; on ; on ;
+	on ; off; off; on ; on ; on ; on ; on ;
+	on ; off; off; off; off; on ; on ; on ;
 
 	--> to achieve this result, "bStates" should look like this:
-	{ true, true, false,
-	false, true, false }
+	{
+		 true,  true, false, false, false,  true,  true,  true,
+		false,  true, false,  true, false, false, false, false,
+		false,  true, false,  true, false, false, false, false,
+		false,  true, false,  true, false, false, false, false,
+		 true,  true,  true,  true, false, false,  true, false,
+		 true, false,  true,  true, false,  true,  true,  true,
+		 true, false, false,  true,  true,  true,  true,  true,
+		 true, false, false, false, false,  true,  true,  true
+	}
 		or
-	bStates[0] = true;  bStates[1] = true;  bStates[2] = false;
-	bStates[3] = false; bStates[4] = true;  bStates[5] = false;
+	bStates[0]  = true;   bStates[1] = true;  bStates[2] = false;  bStates[3] = false;  bStates[4] = false;  bStates[5] = true;   bStates[6] = true;   bStates[7] = true;
+	bStates[8]  = false;  bStates[9] = true; bStates[10] = false; bStates[11] = true;  bStates[12] = false; bStates[13] = false; bStates[14] = false; bStates[15] = false;
+	bStates[16] = false; bStates[17] = true; bStates[18] = false; bStates[19] = true;  bStates[20] = false; bStates[21] = false; bStates[22] = false; bStates[23] = false;
+	bStates[24] = false; bStates[25] = true; bStates[26] = false; bStates[27] = true;  bStates[28] = false; bStates[29] = false; bStates[30] = false; bStates[31] = false;
+	bStates[32] = true;  bStates[33] = true; bStates[34] = true;  bStates[35] = true;  bStates[36] = false; bStates[37] = false; bStates[38] = true;  bStates[39] = false;
+	bStates[40] = true; bStates[41] = false; bStates[42] = true;  bStates[43] = true;  bStates[44] = false; bStates[45] = true;  bStates[46] = true;  bStates[47] = true;
+	bStates[48] = true; bStates[49] = false; bStates[50] = false; bStates[51] = true;  bStates[52] = true;  bStates[53] = true;  bStates[54] = true;  bStates[55] = true;
+	bStates[56] = true; bStates[57] = false; bStates[58] = false; bStates[59] = false; bStates[60] = false; bStates[61] = true;  bStates[62] = true;  bStates[63] = true;
 	*/
 
 
 	//2D-drawing commands
 	//draw a line
 	void DrawLine(int iStartX, int iStartY, int iEndX, int iEndY);
-
+	
 	//draw a rectangle
 	//void DrawRectangle(int iLeft, int iTop, int iRight, int iBottom, bool bFill);
 
