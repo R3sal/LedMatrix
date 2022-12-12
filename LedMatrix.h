@@ -105,8 +105,10 @@ public: //public class members
 		for (unsigned int x = 0; x < iMatrixNumRows * 8; x++)
 		{
 			lm.SetLed(x, y, true);
+			lm.UpdateMatrix();
 			delay(100);
 			lm.SetLed(x, y, false);
+			lm.UpdateMatrix();
 		}
 	}
 
