@@ -101,9 +101,9 @@ public: //public class members
 	LedMatrix lm = **initialize LedMatrix**;
 
 	lm.ClearDisplay();
-	for (unsigned int y = 0; y < iMatrixNumColumns * 8; y++)
+	for (unsigned int y = 0; y < iNumMatrixColumns * 8; y++)
 	{
-		for (unsigned int x = 0; x < iMatrixNumRows * 8; x++)
+		for (unsigned int x = 0; x < iNumMatrixRows * 8; x++)
 		{
 			lm.SetLed(x, y, true);
 			lm.UpdateMatrix();
