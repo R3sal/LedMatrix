@@ -129,7 +129,7 @@ public: //public class members
 	//...of all the matrices
 	void SetIntensities(int iIntensity);
 	//...of one matrix
-	void SetIntensity(int iIntensity, int iMatrixNum);
+	void SetIntensity(int iMatrix, int iIntensity);
 
 
 	//set the state of one or more LEDs
