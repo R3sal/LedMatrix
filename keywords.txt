@@ -1,0 +1,25 @@
+#this file tells the Arduino IDE which color some of the keywords should have
+
+
+#Datatypes (mark with "KEYWORD1")
+
+LedMatrix	KEYWORD1
+
+#Methods and Functions (mark with "KEYWORD2")
+
+SendCommand		KEYWORD2
+SetIntensity		KEYWORD2
+ClearDisplay		KEYWORD2
+ClearMatrix		KEYWORD2
+InvertMatrixStates	KEYWORD2
+SetLed			KEYWORD2
+InvertLed		KEYWORD2
+SetMatrix		KEYWORD2
+DrawLine		KEYWORD2
+UpdateMatrix		KEYWORD2
+
+
+#Constants (mark with "LITERAL1")
+
+TwoToThe	LITERAL1
+NotTwoToThe	LITERAL1
