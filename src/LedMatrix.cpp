@@ -315,7 +315,7 @@ void LedMatrix::ClearMatrix(int iMatrix, bool bState)
 }
 
 //invert every LED in one matrix
-void LedMatrix::InvertMatrixStates(int iMatrix)
+void LedMatrix::InvertMatrixStates(int iMatrix) //todo: rename and make a version which changes the whole display
 {
 	//make some calculations before entering the loops
 	int iLedsPerRow = 8 * m_iNumMatrices;
