@@ -124,8 +124,11 @@ public: //public class members
 	//send any command
 	void SendCommand(int iCommandID, int iData);
 
-	//set the intensity
+	//set the intensity...
 	//iIntensity can range from 0 (least bright) to 15 (brightest)
+	//...of all the matrices
+	void SetIntensities(int iIntensity);
+	//...of one matrix
 	void SetIntensity(int iIntensity, int iMatrixNum);
 
 

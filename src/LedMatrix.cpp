@@ -260,7 +260,25 @@ void LedMatrix::SendCommand(int iCommandID, int iData)
 	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 }
 
-//set the intensity for one or more matrices
+//set the intensity for all matrices
+void LedMatrix::SetIntensities(int iIntensity) //todo: test
+{
+	//set the CS pin to low, so we can send data to the matrix controller
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
+
+	//send one command per matrix
+	for (int i = m_iNumMatrices; i > 0; i--)
+	{
+		//set the new intensity for each matrix
+		SendData(10, iIntensity);
+	}
+
+	/*set the CS pin to high, so the data get latched into the registers of the controller
+	and the command gets executed*/
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
+}
+
+//set the intensity for one matrix
 void LedMatrix::SetIntensity(int iIntensity, int iMatrixNum)
 {
 	//set the CS pin to low, so we can send data to the matrix controller
