@@ -17,9 +17,9 @@ LedMatrix::LedMatrix(int iDataPin, int iClkPin, int iCSPin, int iLEDIntensity,
 	m_MatrixDirSwitched = bSwitchedDir;
 
 	//initialize the state of each Led in the matrix
-	m_LedState = new bool;
-	for (int i = 0; i < 64 * m_iNumMatrices; i++)
-		m_LedState[i] = false;
+	m_LedState = new char[8 * m_iNumMatrices];
+	for (int i = 0; i < 8 * m_iNumMatrices; i++)
+		m_LedState[i] = 0;
 
 	//the pin registers
 	m_pMOSIPinReg = (iDataPin >= 8) ? (int*)&PORTB : (int*)&PORTD;
@@ -225,7 +225,7 @@ void LedMatrix::SendLEDStates(int* iMOSIPin, int* iNotMOSIPin, int* iCLKPin, int
 		*m_pCLKPinReg &= *iNotCLKPin;
 
 		//send one bit, either 0 or 1, depending on the value in "m_LedState"
-		if (m_LedState[iBegin + i])
+		if (m_LedState[iBegin] >> i)
 		{
 			//if bit "i" in "iData" is 1, set the data pin to HIGH...
 			*m_pMOSIPinReg |= *iMOSIPin;
@@ -287,35 +287,37 @@ void LedMatrix::SetIntensity(int iIntensity, int iMatrixNum)
 //set every LED in every matrix either to be enabled or disabled
 void LedMatrix::ClearDisplay(bool bState)
 {
-	//repeat it for each LED in each matrix
-	for (int i = 0; i < 64 * m_iNumMatrices; i++)
+	//either all LEDs in a row are enabled or they are disabled
+	char iState = bState ? 0b11111111 : 0b00000000;
+
+	//repeat it for each LED row in each matrix
+	for (int i = 0; i < 8 * m_iNumMatrices; i++)
 	{
 		//set the LED state to the value which was passed to this function
-		m_LedState[i] = bState;
+		m_LedState[i] = iState;
 	}
 }
 
 //set every LED in one matrix either to be enabled or disabled
 void LedMatrix::ClearMatrix(int iMatrix, bool bState)
 {
+	//either all LEDs in a row are enabled or they are disabled
+	char iState = bState ? 0b11111111 : 0b00000000;
+
 	//make some calculations before entering the loops
-	int iLedsPerRow = 8 * m_iNumMatrices;
-	int iEightTimesMatrixNum = 8 * (m_iNumMatrices - 1 - m_MatrixConfig[iMatrix]);
+	int iMatricesPerRow = m_iNumMatrices;
+	int iMatrixNum = (m_iNumMatrices - 1 - m_MatrixConfig[iMatrix]);
 
 	//repeat it for each row in one matrix
 	for (int i = 0; i < 8; i++)
 	{
-		//repeat for each LED in one row of one matrix
-		for (int j = 0; j < 8; j++)
-		{
-			//set the LED state to the value which was passed to this function
-			m_LedState[j + iEightTimesMatrixNum + i * iLedsPerRow] = bState;
-		}
+		//set the LED row to the value which was passed to this function
+		m_LedState[iMatrixNum + i * iMatricesPerRow] = iState;
 	}
 }
 
 //invert every LED in one matrix
-void LedMatrix::InvertMatrixStates(int iMatrix) //todo: rename and make a version which changes the whole display
+/*void LedMatrix::InvertMatrixStates(int iMatrix) //todo: rename and make a version which changes the whole display
 {
 	//make some calculations before entering the loops
 	int iLedsPerRow = 8 * m_iNumMatrices;
@@ -332,13 +334,13 @@ void LedMatrix::InvertMatrixStates(int iMatrix) //todo: rename and make a versio
 			m_LedState[LedIndex] = !m_LedState[LedIndex];
 		}
 	}
-}
+}*/
 
 //set one Led to a specific state
 void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 {
 	//calculate the number of the matrix, the pixel gets displayed on
-	int iMatrixX = (int)floorf(iCoordX / 8);
+	int iMatrixX = (int)floorf(iCoordX / 8); //todo: remove the floorf and rely on integer division
 	int iMatrixY = (int)floorf(iCoordY / 8);
 	int iMatrixNum = iMatrixY * m_iColumns + iMatrixX;
 	int iFinalMatrix = m_MatrixConfig[iMatrixNum];
@@ -352,15 +354,22 @@ void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 	/*before making calculations, we need to know whether the matrix,
 	where the point is displayed on is turned around by 180° or not*/
 	if (m_MatrixDirSwitched[iMatrixNum])
+	{
 		//if it is, we need to calculate a little bit more
-		iLedStateNum = (7 - iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) +
-			(56 * m_iNumMatrices) - (iLocalY * 8 * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix)) + (7 * m_iNumMatrices) - (iLocalY * m_iNumMatrices);
+		iLocalX = 7 - iLocalX;
+	}
 	else
+	{
 		//if it isn't, just do the basic calculations
-		iLedStateNum = (iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) + (iLocalY * 8 * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix)) + (iLocalY * m_iNumMatrices);
+	}
 
 	//set the correct index of the LED state list to the state which was passed to this function
-	m_LedState[iLedStateNum] = bState;
+	if (bState)
+		m_LedState[iLedStateNum] |= 1 << iLocalX; //todo: optimize with the powers of two list
+	else
+		m_LedState[iLedStateNum] &= ~(1 << iLocalX);
 }
 
 //set one Led to a specific state
@@ -393,7 +402,7 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 }
 
 //set each LED in the Matrix to a specific state
-void LedMatrix::SetMatrix(bool* bStates)
+/*void LedMatrix::SetMatrix(bool* bStates)
 {
 	//repeat for each row
 	for (int i = 0; i < 8; i++)
@@ -415,7 +424,7 @@ void LedMatrix::SetMatrix(bool* bStates)
 			int iFinalMatrixPreCalc = 8 * (m_iNumMatrices - 1 - iFinalMatrix);
 			
 			/*before making calculations, we need to know whether the matrix,
-			where the point is displayed on is turned around by 180° or not*/
+			where the point is displayed on is turned around by 180° or not*//*
 			if (m_MatrixDirSwitched[j])
 			{
 				for (int k = 0; k < 8; k++)
@@ -440,7 +449,7 @@ void LedMatrix::SetMatrix(bool* bStates)
 			}
 		}
 	}
-}
+}*/
 
 
 
@@ -511,7 +520,7 @@ void LedMatrix::UpdateMatrix()
 	int iCLKPin = TwoToThe[m_iCLKPinNum];
 	int iNotCLKPin = NotTwoToThe[m_iCLKPinNum];
 
-	int iTotalColumns = 8 * m_iNumMatrices;
+	int iTotalColumns = m_iNumMatrices;
 
 	//repeat the process for each row
 	for (int i = 0; i < 8; i++)
@@ -520,7 +529,7 @@ void LedMatrix::UpdateMatrix()
 		*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 
 		//repeat it for each matrix
-		for (int j = 0; j < iTotalColumns; j += 8)
+		for (int j = 0; j < iTotalColumns; j++)
 		{
 			//send the LED states to the matrix controller
 			SendLEDStates(&iMOSIPin, &iNotMOSIPin, &iCLKPin, &iNotCLKPin, i + 1, j + iTotalColumns * i);
