@@ -151,8 +151,10 @@ public: //public class members
 	//set the LED in a specific area to a specific state
 	//void SetSubMatrix(bool* bStates, int iMatrixWidth, int iMatrixHeight);
 
-	//set each LED in the Matrix to a specific state
-	void SetMatrix(char* iStates);
+	//set each LED of each matrix to an individual state
+	void SetDisplay(char* iStates);
+	//set each LED in one Matrix to an individual state
+	void SetMatrix(int iMatrix, char* iStates);
 
 	/*
 	"bStates" tells the function, which LEDs should be illuminated

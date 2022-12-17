@@ -427,7 +427,7 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 }
 
 //set each LED in the Matrix to a specific state
-void LedMatrix::SetMatrix(char* iStates)
+void LedMatrix::SetDisplay(char* iStates)
 {
 	//repeat for each row
 	for (int i = 0; i < 8; i++)
@@ -474,6 +474,50 @@ void LedMatrix::SetMatrix(char* iStates)
 				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 5) & 2;
 				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 7) & 1;
 			}
+		}
+	}
+}
+
+//set each LED in the Matrix to a specific state
+void LedMatrix::SetMatrix(int iMatrix, char* iStates)
+{
+	//precalculate this value for performance
+	int iMatrixNum = (m_iNumMatrices - 1 - m_MatrixConfig[iMatrix]);
+
+	//repeat for each row
+	for (int i = 0; i < 8; i++)
+	{
+		//precalculate this value, so it doesn't have to be re-calculated in each loop
+		int iLedRowPreCalc = i * m_iNumMatrices;
+
+		//in this variable the calculated index gets stored in
+		int iLedStateNum = 0;
+			
+		/*before making calculations, we need to know whether the matrix,
+		where the point is displayed on is turned around by 180° or not*/
+		if (m_MatrixDirSwitched[iMatrix])
+		{
+			//if it is, we need to calculate a little bit more
+			iLedStateNum = iMatrixNum + (7 * m_iNumMatrices - iLedRowPreCalc);
+				
+			//set the correct index of the LED state list to the state which was passed to this function
+			m_LedState[iLedStateNum] = iStates[i];
+		}
+		else
+		{
+			//if it isn't, just do the basic calculations
+			iLedStateNum = iMatrixNum + iLedRowPreCalc;
+				
+			//set the correct index of the LED state list to the state which was passed to this function
+			m_LedState[iLedStateNum] = 0;
+			m_LedState[iLedStateNum] |= (iStates[i] << 7) & 128; //this is probably faster than a loop
+			m_LedState[iLedStateNum] |= (iStates[i] << 5) & 64;
+			m_LedState[iLedStateNum] |= (iStates[i] << 3) & 32;
+			m_LedState[iLedStateNum] |= (iStates[i] << 1) & 16;
+			m_LedState[iLedStateNum] |= (iStates[i] >> 1) & 8;
+			m_LedState[iLedStateNum] |= (iStates[i] >> 3) & 4;
+			m_LedState[iLedStateNum] |= (iStates[i] >> 5) & 2;
+			m_LedState[iLedStateNum] |= (iStates[i] >> 7) & 1;
 		}
 	}
 }
