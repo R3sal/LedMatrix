@@ -427,13 +427,13 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 }
 
 //set each LED in the Matrix to a specific state
-/*void LedMatrix::SetMatrix(bool* bStates)
+void LedMatrix::SetMatrix(char* iStates)
 {
 	//repeat for each row
 	for (int i = 0; i < 8; i++)
 	{
 		//precalculate this value, so it doesn't have to be re-calculated in each loop
-		int iLedRowPreCalc = i * 8 * m_iNumMatrices;
+		int iLedRowPreCalc = i * m_iNumMatrices;
 
 		//repeat for each matrix
 		for (int j = 0; j < m_iNumMatrices; j++)
@@ -445,36 +445,38 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 			int iLedStateNum = 0;
 
 			//precalculate some values, so they don't have to be re-calculated in each loop
-			int bStateNumPreCalc = 8 * (j % m_iColumns) + 8 * m_iColumns * (i + 8 * (int)floorf(j / m_iColumns));
-			int iFinalMatrixPreCalc = 8 * (m_iNumMatrices - 1 - iFinalMatrix);
+			int bStateNumPreCalc = (j % m_iColumns) + m_iColumns * (i + 8 * (j / m_iColumns));
+			int iFinalMatrixPreCalc = m_iNumMatrices - 1 - iFinalMatrix;
 			
 			/*before making calculations, we need to know whether the matrix,
-			where the point is displayed on is turned around by 180° or not*//*
+			where the point is displayed on is turned around by 180° or not*/
 			if (m_MatrixDirSwitched[j])
 			{
-				for (int k = 0; k < 8; k++)
-				{
-					//if it is, we need to calculate a little bit more
-					iLedStateNum = (7 - k + iFinalMatrixPreCalc) + (56 * m_iNumMatrices - iLedRowPreCalc);
+				//if it is, we need to calculate a little bit more
+				iLedStateNum = iFinalMatrixPreCalc + (7 * m_iNumMatrices - iLedRowPreCalc);
 				
-					//set the correct index of the LED state list to the state which was passed to this function
-					m_LedState[iLedStateNum] = bStates[k + bStateNumPreCalc];
-				}
+				//set the correct index of the LED state list to the state which was passed to this function
+				m_LedState[iLedStateNum] = iStates[bStateNumPreCalc];
 			}
 			else
 			{
-				for (int k = 0; k < 8; k++)
-				{
-					//if it isn't, just do the basic calculations
-					iLedStateNum = (k + iFinalMatrixPreCalc) + (iLedRowPreCalc);
-
-					//set the correct index of the LED state list to the state which was passed to this function
-					m_LedState[iLedStateNum] = bStates[k + bStateNumPreCalc];
-				}
+				//if it isn't, just do the basic calculations
+				iLedStateNum = iFinalMatrixPreCalc + iLedRowPreCalc;
+				
+				//set the correct index of the LED state list to the state which was passed to this function
+				m_LedState[iLedStateNum] = 0;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] << 7) & 128; //this is probably faster than a loop
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] << 5) & 64;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] << 3) & 32;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] << 1) & 16;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 1) & 8;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 3) & 4;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 5) & 2;
+				m_LedState[iLedStateNum] |= (iStates[bStateNumPreCalc] >> 7) & 1;
 			}
 		}
 	}
-}*/
+}
 
 
 
