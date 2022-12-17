@@ -142,6 +142,9 @@ public: //public class members
 	//set one Led to a specific state
 	void SetLed(int iCoordX, int iCoordY, bool bState);
 
+	//invert the state of a specific LED
+	void InvertLed(int iCoordX, int iCoordY);
+
 	//set the LED in a specific area to a specific state
 	//void SetSubMatrix(bool* bStates, int iMatrixWidth, int iMatrixHeight);
 

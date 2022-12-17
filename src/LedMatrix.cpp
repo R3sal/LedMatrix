@@ -363,6 +363,35 @@ void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 	m_LedState[iLedStateNum] = bState;
 }
 
+//set one Led to a specific state
+void LedMatrix::InvertLed(int iCoordX, int iCoordY)
+{
+	//calculate the number of the matrix, the pixel gets displayed on
+	int iMatrixX = (int)floorf(iCoordX / 8);
+	int iMatrixY = (int)floorf(iCoordY / 8);
+	int iMatrixNum = iMatrixY * m_iColumns + iMatrixX;
+	int iFinalMatrix = m_MatrixConfig[iMatrixNum];
+
+	//calculate the position on the 8x8 matrix
+	int iLocalX = iCoordX % 8;
+	int iLocalY = iCoordY % 8;
+
+	//calculate the index we are searching for
+	int iLedStateNum = 0;
+	/*before making calculations, we need to know whether the matrix,
+	where the point is displayed on is turned around by 180° or not*/
+	if (m_MatrixDirSwitched[iMatrixNum])
+		//if it is, we need to calculate a little bit more
+		iLedStateNum = (7 - iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) +
+			(56 * m_iNumMatrices) - (iLocalY * 8 * m_iNumMatrices);
+	else
+		//if it isn't, just do the basic calculations
+		iLedStateNum = (iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) + (iLocalY * 8 * m_iNumMatrices);
+
+	//set the correct index of the LED state list to the state which was passed to this function
+	m_LedState[iLedStateNum] = !(m_LedState[iLedStateNum]);
+}
+
 //set each LED in the Matrix to a specific state
 void LedMatrix::SetMatrix(bool* bStates)
 {
