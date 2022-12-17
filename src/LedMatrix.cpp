@@ -225,7 +225,7 @@ void LedMatrix::SendLEDStates(int* iMOSIPin, int* iNotMOSIPin, int* iCLKPin, int
 		*m_pCLKPinReg &= *iNotCLKPin;
 
 		//send one bit, either 0 or 1, depending on the value in "m_LedState"
-		if (m_LedState[iBegin] >> i)
+		if (m_LedState[iBegin] & TwoToThe[i])
 		{
 			//if bit "i" in "iData" is 1, set the data pin to HIGH...
 			*m_pMOSIPinReg |= *iMOSIPin;
@@ -356,20 +356,20 @@ void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 	if (m_MatrixDirSwitched[iMatrixNum])
 	{
 		//if it is, we need to calculate a little bit more
-		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix)) + (7 * m_iNumMatrices) - (iLocalY * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix) + (7 * m_iNumMatrices) - (iLocalY * m_iNumMatrices);
 		iLocalX = 7 - iLocalX;
 	}
 	else
 	{
 		//if it isn't, just do the basic calculations
-		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix)) + (iLocalY * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix) + (iLocalY * m_iNumMatrices);
 	}
 
 	//set the correct index of the LED state list to the state which was passed to this function
 	if (bState)
-		m_LedState[iLedStateNum] |= 1 << iLocalX; //todo: optimize with the powers of two list
+		m_LedState[iLedStateNum] |= TwoToThe[iLocalX]; //todo: optimize with the powers of two list
 	else
-		m_LedState[iLedStateNum] &= ~(1 << iLocalX);
+		m_LedState[iLedStateNum] &= NotTwoToThe[iLocalX];
 }
 
 //set one Led to a specific state
