@@ -367,7 +367,7 @@ void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 
 	//set the correct index of the LED state list to the state which was passed to this function
 	if (bState)
-		m_LedState[iLedStateNum] |= TwoToThe[iLocalX]; //todo: optimize with the powers of two list
+		m_LedState[iLedStateNum] |= TwoToThe[iLocalX];
 	else
 		m_LedState[iLedStateNum] &= NotTwoToThe[iLocalX];
 }
@@ -390,15 +390,22 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 	/*before making calculations, we need to know whether the matrix,
 	where the point is displayed on is turned around by 180° or not*/
 	if (m_MatrixDirSwitched[iMatrixNum])
+	{
 		//if it is, we need to calculate a little bit more
-		iLedStateNum = (7 - iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) +
-			(56 * m_iNumMatrices) - (iLocalY * 8 * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix) + (7 * m_iNumMatrices) - (iLocalY * m_iNumMatrices);
+		iLocalX = 7 - iLocalX;
+	}
 	else
+	{
 		//if it isn't, just do the basic calculations
-		iLedStateNum = (iLocalX + (8 * (m_iNumMatrices - 1 - iFinalMatrix))) + (iLocalY * 8 * m_iNumMatrices);
+		iLedStateNum = (m_iNumMatrices - 1 - iFinalMatrix) + (iLocalY * m_iNumMatrices);
+	}
 
 	//set the correct index of the LED state list to the state which was passed to this function
-	m_LedState[iLedStateNum] = !(m_LedState[iLedStateNum]);
+	if (m_LedState[iLedStateNum] & TwoToThe[iLocalX])
+		m_LedState[iLedStateNum] &= NotTwoToThe[iLocalX];
+	else
+		m_LedState[iLedStateNum] |= TwoToThe[iLocalX];
 }
 
 //set each LED in the Matrix to a specific state
