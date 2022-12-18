@@ -32,7 +32,7 @@ private: //private class members
 	int m_iRows;
 	
 	//the state of each Led in the matrix
-	bool* m_LedState;
+	char* m_LedState;
 
 	//the pin registers
 	int* m_pMOSIPinReg;
@@ -124,9 +124,12 @@ public: //public class members
 	//send any command
 	void SendCommand(int iCommandID, int iData);
 
-	//set the intensity
+	//set the intensity...
 	//iIntensity can range from 0 (least bright) to 15 (brightest)
-	void SetIntensity(int iIntensity, int iMatrixNum);
+	//...of all the matrices
+	void SetIntensities(int iIntensity);
+	//...of one matrix
+	void SetIntensity(int iMatrix, int iIntensity);
 
 
 	//set the state of one or more LEDs
@@ -137,7 +140,7 @@ public: //public class members
 	void ClearMatrix(int iMatrix, bool bState = false);
 
 	//invert every LED in one matrix
-	void InvertMatrixStates(int iMatrix);
+	//void InvertMatrixStates(int iMatrix);
 	
 	//set one Led to a specific state
 	void SetLed(int iCoordX, int iCoordY, bool bState);
@@ -148,8 +151,10 @@ public: //public class members
 	//set the LED in a specific area to a specific state
 	//void SetSubMatrix(bool* bStates, int iMatrixWidth, int iMatrixHeight);
 
-	//set each LED in the Matrix to a specific state
-	void SetMatrix(bool* bStates);
+	//set each LED of each matrix to an individual state
+	void SetDisplay(char* iStates);
+	//set each LED in one Matrix to an individual state
+	void SetMatrix(int iMatrix, char* iStates);
 
 	/*
 	"bStates" tells the function, which LEDs should be illuminated
