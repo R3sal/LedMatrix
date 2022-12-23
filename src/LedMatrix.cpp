@@ -358,8 +358,8 @@ void LedMatrix::ClearMatrix(int iMatrix, bool bState)
 void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 {
 	//calculate the number of the matrix, the pixel gets displayed on
-	int iMatrixX = (int)floorf(iCoordX / 8); //todo: remove the floorf and rely on integer division
-	int iMatrixY = (int)floorf(iCoordY / 8);
+	int iMatrixX = iCoordX / 8;
+	int iMatrixY = iCoordY / 8;
 	int iMatrixNum = iMatrixY * m_iColumns + iMatrixX;
 	int iFinalMatrix = m_MatrixConfig[iMatrixNum];
 
@@ -394,8 +394,8 @@ void LedMatrix::SetLed(int iCoordX, int iCoordY, bool bState)
 void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 {
 	//calculate the number of the matrix, the pixel gets displayed on
-	int iMatrixX = (int)floorf(iCoordX / 8);
-	int iMatrixY = (int)floorf(iCoordY / 8);
+	int iMatrixX = iCoordX / 8;
+	int iMatrixY = iCoordY / 8;
 	int iMatrixNum = iMatrixY * m_iColumns + iMatrixX;
 	int iFinalMatrix = m_MatrixConfig[iMatrixNum];
 
