@@ -261,7 +261,7 @@ void LedMatrix::SendCommand(int iCommandID, int iData)
 }
 
 //set the intensity for all matrices
-void LedMatrix::SetIntensities(int iIntensity) //todo: test
+void LedMatrix::SetIntensities(int iIntensity)
 {
 	//set the CS pin to low, so we can send data to the matrix controller
 	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
