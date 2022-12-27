@@ -39,54 +39,54 @@ LedMatrix::LedMatrix(int iDataPin, int iClkPin, int iCSPin, int iLEDIntensity,
 	//initialize the matrices
 	//repeat every command for each matrix and latch it into the controllers registers afterwards
 	//prepare the controllers for receiving data
-	PullDownCS();
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 	for (int i = 0; i < m_iNumMatrices; i++)
 	{
 		//disable display test mode
 		SendData(15, 0);
 	}
 	//latch the data into the controllers
-	PullUpCS();
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 
 	//prepare the controllers for receiving data
-	PullDownCS();
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 	for (int i = 0; i < m_iNumMatrices; i++)
 	{
 		//go out of shutdown mode
 		SendData(12, 1);
 	}
 	//latch the data into the controllers
-	PullUpCS();
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 
 	//prepare the controllers for receiving data
-	PullDownCS();
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 	for (int i = 0; i < m_iNumMatrices; i++)
 	{
 		//set the scan limit to the maximum, so every digit is displayed
 		SendData(11, 7);
 	}
 	//latch the data into the controllers
-	PullUpCS();
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 
 	//prepare the controllers for receiving data
-	PullDownCS();
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 	for (int i = 0; i < m_iNumMatrices; i++)
 	{
 		//turn off any decoding
 		SendData(9, 0);
 	}
 	//latch the data into the controllers
-	PullUpCS();
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 
 	//prepare the controllers for receiving data
-	PullDownCS();
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 	for (int i = 0; i < m_iNumMatrices; i++)
 	{
 		//set the intensity to the value which was passed to this function
 		SendData(10, iLEDIntensity);
 	}
 	//latch the data into the controllers
-	PullUpCS();
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 }
 
 //the class destructor
@@ -100,7 +100,7 @@ LedMatrix::~LedMatrix()
 //private functions
 //functions for sending data trough the defined output pins
 //prepare for data transfer by pulling the CS-Pin to the ground
-void LedMatrix::PullDownCS()
+void LedMatrix::PullDownCS() //todo: either inline and use or delete
 {
 	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 }
