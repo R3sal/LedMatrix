@@ -92,7 +92,8 @@ LedMatrix::LedMatrix(int iDataPin, int iClkPin, int iCSPin, int iLEDIntensity,
 //the class destructor
 LedMatrix::~LedMatrix()
 {
-
+	//todo: shut the matrices down again
+	delete[] m_LedState; //todo: test
 }
 
 
