@@ -92,7 +92,16 @@ LedMatrix::LedMatrix(int iDataPin, int iClkPin, int iCSPin, int iLEDIntensity,
 //the class destructor
 LedMatrix::~LedMatrix()
 {
-	//todo: shut the matrices down again
+	//prepare the controllers for receiving data
+	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
+	for (int i = 0; i < m_iNumMatrices; i++)
+	{
+		//go back into shutdown mode
+		SendData(12, 0);
+	}
+	//latch the data into the controllers
+	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
+
 	delete[] m_LedState; //todo: test
 }
 
