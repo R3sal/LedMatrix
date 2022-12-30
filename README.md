@@ -11,4 +11,4 @@ All the functions and their descriptions are in "LedMatrix.h".
 Todos
 ----
  * make examples
- * backend improvements (reducing the memory footprint)
+ * improve DrawLine performance
