@@ -108,21 +108,6 @@ LedMatrix::~LedMatrix()
 
 
 //private functions
-//functions for sending data trough the defined output pins
-//prepare for data transfer by pulling the CS-Pin to the ground
-void LedMatrix::PullDownCS() //todo: either inline and use or delete
-{
-	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
-}
-
-
-//latch the data into the controller by pulling the CS-pin to the current voltage
-void LedMatrix::PullUpCS()
-{
-	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
-}
-
-
 //send any data to the matrix
 void LedMatrix::SendData(int iAddress, int iData)
 {

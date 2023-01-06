@@ -45,11 +45,6 @@ private: //private class members
 
 
 	//functions for sending data to the LED matrix
-	//prepare for data transfer by pulling the CS-Pin to the ground
-	void PullDownCS(); //todo: either inline and use or delete
-	//latch the data into the controller by pulling the CS-pin to the current voltage
-	void PullUpCS();
-
 	//send data to the matrix controller(s)
 	void SendData(int iAddress, int iData);
 
