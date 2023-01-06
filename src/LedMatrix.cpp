@@ -102,7 +102,7 @@ LedMatrix::~LedMatrix()
 	//latch the data into the controllers
 	*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 
-	delete[] m_LedState; //todo: test
+	delete[] m_LedState;
 }
 
 
