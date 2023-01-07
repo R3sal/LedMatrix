@@ -606,32 +606,4 @@ void LedMatrix::UpdateMatrix()
 		*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
 	}
 
-
-
-	/*/repeat the process for each row
-	for (int i = 0; i < 8; i++)
-	{
-		//set the CS pin to low, so we can send data to the matrix controller
-		*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
-
-		//repeat it for each matrix
-		for (int j = 0; j < m_iNumMatrices; j++)
-		{
-			//send the LED states to the matrix controller
-			SendLEDStates(&iMOSIPin, &iNotMOSIPin, &iCLKPin, &iNotCLKPin, i + 1, 8 * (j + m_iNumMatrices * i));
-		}
-
-		/*set the CS pin to high, so the data get latched into the registers of the controller
-		and the LEDs get enabled/
-		*m_pCSPinReg |= TwoToThe[m_iCSPinNum];
-	}*/
-
-
-	//for eventual debugging; will be removed
-	/*for (int i = 0; i < m_iNumMatrices; i++)
-	{
-		Serial.print(i);
-		Serial.print(";\t");
-		Serial.println(m_MatrixConfig[i]);
-	}*/
 }
