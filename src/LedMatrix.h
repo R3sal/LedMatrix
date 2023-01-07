@@ -9,6 +9,7 @@
 
 //constants
 //a list which represents the "2 to the power of n"-function for (0 <= n <= 7)
+//todo: test bitshift performance
 const int TwoToThe[]	= { 0b00000001, 0b00000010, 0b00000100, 0b00001000, 0b00010000, 0b00100000, 0b01000000, 0b10000000 };
 //a list which represents the binary inverse of the values in the list above
 const int NotTwoToThe[]	= { 0b11111110, 0b11111101, 0b11111011, 0b11110111, 0b11101111, 0b11011111, 0b10111111, 0b01111111 };

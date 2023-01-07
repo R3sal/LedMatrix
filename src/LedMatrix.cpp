@@ -123,7 +123,7 @@ void LedMatrix::SendData(int iAddress, int iData)
 	}
 
 	//the next four bits indicate the address (in our case the row of the matrix)
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++) //todo: if only 3 - i is used change for loop to go from 3 to 0
 	{
 		//set the clock pin to a low power state
 		*m_pCLKPinReg &= NotTwoToThe[m_iCLKPinNum];
@@ -173,7 +173,7 @@ void LedMatrix::SendData(int iAddress, int iData)
 
 
 //send 8 values from m_LedState to the matrix controller
-void LedMatrix::SendLEDStates(int* iMOSIPin, int* iNotMOSIPin, int* iCLKPin, int* iNotCLKPin, int iAddress, int iBegin)
+void LedMatrix::SendLEDStates(int* iMOSIPin, int* iNotMOSIPin, int* iCLKPin, int* iNotCLKPin, int iAddress, int iBegin) //todo: don't pass pin enablers and disablers as pointers
 {
 	//the first four bits are ignored by the controller, so just clock through them
 	*m_pMOSIPinReg &= *iNotMOSIPin;
@@ -262,7 +262,7 @@ void LedMatrix::SetIntensities(int iIntensity)
 	*m_pCSPinReg &= NotTwoToThe[m_iCSPinNum];
 
 	//send one command per matrix
-	for (int i = m_iNumMatrices; i > 0; i--)
+	for (int i = m_iNumMatrices; i > 0; i--) //todo: change this to more conventional from 0 to m_iNumMatrices - 1
 	{
 		//set the new intensity for each matrix
 		SendData(10, iIntensity);
@@ -318,7 +318,7 @@ void LedMatrix::ClearMatrix(int iMatrix, bool bState)
 	char iState = bState ? 0b11111111 : 0b00000000;
 
 	//make some calculations before entering the loops
-	int iMatricesPerRow = m_iNumMatrices;
+	int iMatricesPerRow = m_iNumMatrices; //todo: check if this is a bug (probably shoul be m_iRows) and use directly, without copying to an other variable
 	int iMatrixNum = (m_iNumMatrices - 1 - m_MatrixConfig[iMatrix]);
 
 	//repeat it for each row in one matrix
@@ -415,6 +415,7 @@ void LedMatrix::InvertLed(int iCoordX, int iCoordY)
 	}
 
 	//set the correct index of the LED state list to the state which was passed to this function
+	//todo: test and performance comparison of m_LedState[iLedStateNum] = m_LedState[iLedStateNum] ^ TwoToThe[iLocalX];
 	if (m_LedState[iLedStateNum] & TwoToThe[iLocalX])
 		m_LedState[iLedStateNum] &= NotTwoToThe[iLocalX];
 	else
@@ -585,6 +586,7 @@ void LedMatrix::UpdateMatrix()
 	int iNotMOSIPin = NotTwoToThe[m_iMOSIPinNum];
 	int iCLKPin = TwoToThe[m_iCLKPinNum];
 	int iNotCLKPin = NotTwoToThe[m_iCLKPinNum];
+	//todo: check, if storing CSPin and NotCSPin in a local variable makes it faster
 
 	int iTotalColumns = m_iNumMatrices;
 
