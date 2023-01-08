@@ -1,7 +1,8 @@
 # LedMatrix
 A fast library for displaying something through the MAX7221 chip (and probably also the MAX7219)
 
-Note: It uses its own implementation of "digitalWrite()", which is specific to the ATmega168/328P (it may work on other chips but it was not designed to do so)
+Note: It uses its own implementation of "digitalWrite()", which is specific to the ATmega168/328P   
+(it may work on other chips but it was not designed to do so)
 
 Getting started
 ---------------
@@ -12,3 +13,4 @@ Todos
 ----
  * make more examples
  * improve DrawLine performance
+ * add draw commands for other simple geometric forms (e.g. rectangles, circles)
